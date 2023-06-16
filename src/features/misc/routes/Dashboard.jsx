@@ -1,7 +1,7 @@
 import { Navbar } from "../components/Navbar";
 import { Sidebar } from "../components/Sidebar";
-import { Projects } from "@/features/projects";
 import { useEffect, useRef } from "react";
+import { Outlet } from "react-router-dom";
 
 export const Dashboard = () => {
   const navRef = useRef(null);
@@ -14,7 +14,9 @@ export const Dashboard = () => {
       <Sidebar />
       <section className="h-screen flex-1">
         <Navbar ref={navRef} />
-        <Projects ref={projectsRef} />
+        <section ref={projectsRef}>
+          <Outlet />
+        </section>
       </section>
     </main>
   );

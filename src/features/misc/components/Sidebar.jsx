@@ -9,7 +9,8 @@ import Message from "../assets/Message.svg";
 import Settings from "../assets/Settings.svg";
 import Task from "../assets/Task.svg";
 import AddSquare from "../assets/AddSquare.svg";
-import { ProjectTabLinks } from "@/features/projects";
+import { ProjectTabLinks, getAllProjects} from "@/features/projects";
+import Bulb from "../assets/Bulb.svg";
 
 export const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(true);
@@ -20,17 +21,12 @@ export const Sidebar = () => {
     { title: "Settings", icon: Settings },
     { title: "Task", icon: Task },
   ];
-  const Projects = [
-    { title: "Mobile App", id: 1 },
-    { title: "Website Redesign", id: 2 },
-    { title: "Design System", id: 3 },
-    { title: "Wireframes", id: 4 },
-  ];
+  const Projects = getAllProjects();
   return (
     <aside
       className={twMerge(
-        "h-screen border-r-2 border-gray-light transition-all duration-300 overflow-x-hidden",
-        isOpen ? "w-[200px]" : "w-16"
+        "h-screen border-r-2 border-gray-light transition-all duration-300 overflow-x-hidden scrollbar-track-slate-100 scrollbar-thumb-slate-300 scrollbar-thin",
+        isOpen ? "w-[240px]" : "w-16"
       )}
     >
       <div
@@ -59,49 +55,66 @@ export const Sidebar = () => {
           />
         </button>
       </div>
-
-      <section className="flex flex-col m-4 pb-4 border-b-gray-light border-b-2">
-        {TabOptions?.map((taboption) => (
-          <TabLinks
-            isOpen={isOpen}
-            key={taboption.title}
-            title={taboption.title}
-            icon={taboption.icon}
-          />
-        ))}
-      </section>
-
-      <section className="p-4 text-sm text-logoColor">
-        <div
-          className={twMerge(
-            "flex",
-            isOpen ? "justify-between" : "justify-center"
-          )}
-        >
-          <h2
-            className={twMerge(
-              "uppercase font-bold",
-              isOpen ? "block" : "hidden"
-            )}
-          >
-            my projects
-          </h2>
-          <button>
-            <img src={AddSquare} alt="Create New" />
-          </button>
-        </div>
-        <section className="mt-4 flex flex-col pb-4 border-b-gray-light border-b-2">
-          {Projects?.map((taboption) => (
-            <ProjectTabLinks
+      <div className="overflow-y-auto">
+        <section className="flex flex-col m-4 pb-4 border-b-gray-light border-b-2">
+          {TabOptions?.map((taboption) => (
+            <TabLinks
               isOpen={isOpen}
               key={taboption.title}
               title={taboption.title}
               icon={taboption.icon}
-              id={taboption.id}
             />
           ))}
         </section>
-      </section>
+
+        <section className="p-4 text-sm text-logoColor">
+          <div
+            className={twMerge(
+              "flex",
+              isOpen ? "justify-between" : "justify-center"
+            )}
+          >
+            <h2
+              className={twMerge(
+                "uppercase font-bold",
+                isOpen ? "block" : "hidden"
+              )}
+            >
+              my projects
+            </h2>
+            <button>
+              <img src={AddSquare} alt="Create New" />
+            </button>
+          </div>
+          <section className="mt-4 flex flex-col pb-4">
+            {Projects?.map((taboption) => (
+              <ProjectTabLinks
+                isOpen={isOpen}
+                key={taboption.title}
+                title={taboption.title}
+                icon={taboption.icon}
+                id={taboption.id}
+                color={taboption.color}
+              />
+            ))}
+          </section>
+        </section>
+        {isOpen && (
+          <section className="mt-16 relative flex rounded-2xl gap-4 flex-col items-center justify-center bg-[#F5F5F5] p-4 m-4">
+            <span className="w-20 flex justify-center items-center h-20 rounded-full absolute top-0 left-1/2 -translate-y-1/2 -translate-x-1/2 bg-[#F5F5F5] -z-1">
+              <img src={Bulb} alt="" />
+            </span>
+            <h2 className="text-sm z-10">Thoughts Time</h2>
+            <p className="text-xs text-logoColor text-center">
+              We don&apos;t have any notice for you, till then you can share
+              your thoughts with your peers.
+            </p>
+            <button className="bg-white px-2 text-sm py-3">
+              Write a message
+            </button>
+          </section>
+        )}
+      </div>
     </aside>
   );
 };

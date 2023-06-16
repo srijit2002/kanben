@@ -2,7 +2,7 @@ import PropTypes from "prop-types";
 import { NavLink } from "react-router-dom";
 import { twMerge } from "tailwind-merge";
 
-export const ProjectTabLinks = ({ title, isOpen, id, color }) => {
+export const ProjectTabLinks = ({ title, isOpen=true, id, color }) => {
   return (
     <NavLink
       to={`/${id}`}

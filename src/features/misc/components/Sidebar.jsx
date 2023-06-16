@@ -25,7 +25,7 @@ export const Sidebar = () => {
   return (
     <aside
       className={twMerge(
-        "h-screen border-r-2 border-gray-light transition-all duration-300 overflow-x-hidden scrollbar-track-slate-100 scrollbar-thumb-slate-300 scrollbar-thin",
+        "lg:hidden h-screen border-r-2 border-gray-light transition-all duration-300 overflow-x-hidden scrollbar-track-slate-100 scrollbar-thumb-slate-300 scrollbar-thin",
         isOpen ? "w-[240px]" : "w-16"
       )}
     >

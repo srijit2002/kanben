@@ -2,7 +2,7 @@ import { MagnifyingGlass } from "phosphor-react";
 
 export const SearchBar = () => {
   return (
-    <div className="flex bg-gray-dark w-fit py-2 px-2.5 gap-2 rounded-md">
+    <div className="flex lg:w-full bg-gray-dark w-fit py-2 px-2.5 gap-2 rounded-md">
       <MagnifyingGlass size={20} className="text-[#787486]" />
       <input
         type="text"

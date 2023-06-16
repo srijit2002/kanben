@@ -10,7 +10,7 @@ import {
 
 export const ProjectActionBar = () => {
   return (
-    <section className="flex justify-between items-center">
+    <section className="flex justify-between items-center lg:flex-wrap gap-4">
       <div className="flex gap-3">
         <Button
           startIcon={<Funnel size={20} className="text-logoColor" />}

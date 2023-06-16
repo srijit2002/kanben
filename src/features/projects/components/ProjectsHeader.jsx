@@ -4,9 +4,9 @@ import UserProfiles from "../assets/UserProfiles.svg";
 
 export const ProjectsHeader = ({ title }) => {
   return (
-    <section className="flex items-center justify-between">
+    <section className="flex items-center justify-between lg:flex-wrap gap-2">
       <div className="flex items-center gap-4">
-        <h1 className="text-5xl font-semibold text-[#0D062D]">{title}</h1>
+        <h1 className="text-5xl font-semibold text-[#0D062D] lg:text-3xl">{title}</h1>
         <div className="flex gap-2">
           <button className="bg-blue-light text-blue-dark p-1 rounded-md">
             <PencilSimple size={18} />

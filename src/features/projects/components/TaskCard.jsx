@@ -100,4 +100,7 @@ TaskCard.propTypes = {
   numberOfComments: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   people: PropTypes.array,
   isDragging: PropTypes.bool,
+  _id: PropTypes.string,
+  index: PropTypes.number,
+  numberOfFiles: PropTypes.number,
 };

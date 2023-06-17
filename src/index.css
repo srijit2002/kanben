@@ -2,7 +2,11 @@
 body {
   font-family: inter;
   overflow-y: hidden;
+  overflow-x:hidden;
 }
 * {
   font-family: inherit;
+}
+#root{
+  overflow-x:hidden;
 }

@@ -27,7 +27,7 @@ export const MobileNav = () => {
         "min-lg:hidden border-r-2 border-b-2 border-gray-light transition-all duration-300 overflow-x-hidden scrollbar-track-slate-100 scrollbar-thumb-slate-300 scrollbar-thin overflow-y-auto"
       )}
     >
-      <section className=" p-4 flex gap-4">
+      <section className="p-2 flex gap-4">
         <button
           onClick={() => setIsOpen((prev) => !prev)}
           className={twMerge(
@@ -46,7 +46,7 @@ export const MobileNav = () => {
         </div>
       </section>
       <section
-        className={twMerge("transition-all duration-300", isOpen ? "" : "h-0")}
+        className={twMerge("transition-all duration-300", isOpen ? "" : "h-0 overflow-y-hidden")}
       >
         <section className="flex flex-col m-2 pb-4 border-b-gray-light border-b-2">
           {TabOptions?.map((taboption) => (

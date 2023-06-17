@@ -11,7 +11,7 @@ export const Dashboard = () => {
     projectsRef.current.style.height = `calc(100vh - ${navRef.current.offsetHeight}px)`;
   }, []);
   return (
-    <main className="flex flex-1 bg-white">
+    <main className="flex flex-1 bg-white xs:overflow-x-hidden">
       <Sidebar />
       <section className="h-screen flex-1">
         <MobileNav />

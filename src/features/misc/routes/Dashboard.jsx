@@ -1,8 +1,9 @@
 import { Navbar } from "../components/Navbar";
 import { Sidebar } from "../components/Sidebar";
 import { useEffect, useRef } from "react";
-import { Outlet } from "react-router-dom";
+import { useOutlet } from "react-router-dom";
 import { MobileNav } from "../components/MobileNav";
+import { DashboardPlaceholder } from "../components/DashboardPlaceholder";
 
 export const Dashboard = () => {
   const navRef = useRef(null);
@@ -10,6 +11,7 @@ export const Dashboard = () => {
   useEffect(() => {
     projectsRef.current.style.height = `calc(100vh - ${navRef.current.offsetHeight}px)`;
   }, []);
+  const outlet = useOutlet();
   return (
     <main className="flex flex-1 bg-white xs:overflow-x-hidden">
       <Sidebar />
@@ -17,7 +19,7 @@ export const Dashboard = () => {
         <MobileNav />
         <Navbar ref={navRef} />
         <section ref={projectsRef}>
-          <Outlet />
+          {outlet || <DashboardPlaceholder />}
         </section>
       </section>
     </main>

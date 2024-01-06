@@ -1,3 +1,5 @@
+import Database from "@/util/Database";
+
 const AllProjects = [
   {
     title: "Mobile App",
@@ -21,9 +23,9 @@ const AllProjects = [
   },
 ];
 export const getProjectDetails = ({ projectId }) => {
-  return AllProjects[projectId];
+  return Database.load("projects").find((project) => project.id === projectId);
 };
 
-export const getAllProjects=()=>{
-  return AllProjects;
-}
+export const getAllProjects = () => {
+  return Database.load("projects");
+};

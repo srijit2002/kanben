@@ -2,26 +2,22 @@ import { useState } from "react";
 import { twMerge } from "tailwind-merge";
 import { CaretDoubleLeft } from "phosphor-react";
 import Logo from "../assets/Logo.svg";
-import { TabLinks } from "./TabLinks";
-import Home from "../assets/Home.svg";
-import Members from "../assets/Members.svg";
-import Message from "../assets/Message.svg";
-import Settings from "../assets/Settings.svg";
-import Task from "../assets/Task.svg";
 import AddSquare from "../assets/AddSquare.svg";
-import { ProjectTabLinks, getAllProjects} from "@/features/projects";
+import { ProjectTabLinks } from "@/features/projects";
 import Bulb from "../assets/Bulb.svg";
+import { NEW_PROJECT } from "@/features/projects/";
+import { useAppContext } from "@/context/Context.jsx";
+import { useNavigate } from "react-router-dom";
 
 export const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(true);
-  const TabOptions = [
-    { title: "Home", icon: Home },
-    { title: "Members", icon: Members },
-    { title: "Message", icon: Message },
-    { title: "Settings", icon: Settings },
-    { title: "Task", icon: Task },
-  ];
-  const Projects = getAllProjects();
+  const { Projects, setProjects } = useAppContext();
+  const navigate = useNavigate();
+  const handleCreateProject = () => {
+    let newProject = NEW_PROJECT();
+    setProjects((prev) => [...prev, newProject]);
+    navigate(newProject.id);
+  };
   return (
     <aside
       className={twMerge(
@@ -56,17 +52,6 @@ export const Sidebar = () => {
         </button>
       </div>
       <div className="overflow-y-auto">
-        <section className="flex flex-col m-4 pb-4 border-b-gray-light border-b-2">
-          {TabOptions?.map((taboption) => (
-            <TabLinks
-              isOpen={isOpen}
-              key={taboption.title}
-              title={taboption.title}
-              icon={taboption.icon}
-            />
-          ))}
-        </section>
-
         <section className="p-4 text-sm text-logoColor">
           <div
             className={twMerge(
@@ -82,7 +67,7 @@ export const Sidebar = () => {
             >
               my projects
             </h2>
-            <button>
+            <button onClick={handleCreateProject}>
               <img src={AddSquare} alt="Create New" />
             </button>
           </div>
@@ -90,7 +75,7 @@ export const Sidebar = () => {
             {Projects?.map((taboption) => (
               <ProjectTabLinks
                 isOpen={isOpen}
-                key={taboption.title}
+                key={taboption.id}
                 title={taboption.title}
                 icon={taboption.icon}
                 id={taboption.id}
@@ -106,12 +91,9 @@ export const Sidebar = () => {
             </span>
             <h2 className="text-sm z-10">Thoughts Time</h2>
             <p className="text-xs text-logoColor text-center">
-              We don&apos;t have any notice for you, till then you can share
-              your thoughts with your peers.
+              The shortage of project managers could result in a $207.9 billion
+              GDP loss by 2027.
             </p>
-            <button className="bg-white px-2 text-sm py-3">
-              Write a message
-            </button>
           </section>
         )}
       </div>

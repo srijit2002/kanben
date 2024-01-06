@@ -1,67 +1,60 @@
 import { TaskProgressCol } from "./TaskProgressCol";
 import { useState } from "react";
-import { DragDropContext } from "react-beautiful-dnd";
 import PropTypes from "prop-types";
 import { twMerge } from "tailwind-merge";
+import { TaskEditModal } from "./TaskEditModal";
+import { useParams } from "react-router-dom";
+import { useAppContext } from "@/context/Context";
 
-export const ProjectTasks = ({ tasks = [], isDirectionRow }) => {
-  const [data, setData] = useState(tasks);
-  const getSourceAndDestinationIndex = ({ source, destination }) => {
-    return [parseInt(source.index), parseInt(destination.index)];
-  };
-  const insertAtIndex = (array, index, value) => {
-    const newArray = [...array];
-    newArray.join();
-    newArray.splice(index, 0, value);
-    newArray.join();
-    return newArray;
-  };
-  const removeElementWithkey = (array, key, value) => {
-    return array?.filter((element) => element[key] !== value);
-  };
-  const handleDragEnd = ({ source, destination }) => {
-    if (!source || !destination) return;
-    const sourceColIndex = parseInt(source.droppableId);
-    const sourceCol = data[sourceColIndex];
-    const destColIndex = parseInt(destination.droppableId);
-    const destCol = data[destColIndex];
-    const [sourceIndex, destIndex] = getSourceAndDestinationIndex({
-      source,
-      destination,
-    });
-    const draggedElement = { ...sourceCol.data[sourceIndex] };
-    const sourceColNewData = removeElementWithkey(
-      data[sourceColIndex].data,
-      "_id",
-      draggedElement._id
-    );
-
-    const destColNewData = insertAtIndex(
-      sourceColIndex == destColIndex ? sourceColNewData : destCol.data,
-      destIndex,
-      draggedElement
-    );
-    console.log("Dest col new data", destColNewData);
-    setData((oldData) => {
-      const newData = [...oldData];
-      newData[sourceColIndex].data = sourceColNewData;
-      newData[destColIndex].data = destColNewData;
-      return newData;
-    });
-  };
+export const ProjectTasks = ({ isDirectionRow }) => {
+  const { setEditModalDetails, Projects: AllProjects } = useAppContext();
+  const { projectId } = useParams();
+  const [modalOpen, setModalOpen] = useState(false);
+  const Projects = AllProjects.find(({ id }) => id === projectId);
   return (
-    <section
-      className={twMerge(
-        "flex gap-4 flex-wrap",
-        isDirectionRow ? "flex-row" : "flex-col"
-      )}
-    >
-      <DragDropContext onDragEnd={handleDragEnd}>
-        {data.map((colData) => (
-          <TaskProgressCol {...colData} key={colData._id} />
-        ))}
-      </DragDropContext>
-    </section>
+    <>
+      <TaskEditModal
+        isOpen={modalOpen}
+        closeModal={() => setModalOpen(false)}
+      />
+      <section
+        className={twMerge(
+          "flex gap-4 flex-wrap",
+          isDirectionRow ? "flex-row" : "flex-col"
+        )}
+      >
+        <TaskProgressCol
+          title="To-Do"
+          data={Projects.toDoTasks || []}
+          color="#5030E5"
+          taskKey="toDoTasks"
+          onModalOpen={(taskId) => {
+            setEditModalDetails({ taskId, projectId, type: "toDoTasks" });
+            setModalOpen(true);
+          }}
+        />
+        <TaskProgressCol
+          title="On Progress"
+          data={Projects.onProgressTasks || []}
+          color="#FFA500"
+          taskKey="onProgressTasks"
+          onModalOpen={(taskId) => {
+            setEditModalDetails({ taskId, projectId, type: "onProgressTasks" });
+            setModalOpen(true);
+          }}
+        />
+        <TaskProgressCol
+          title="Done"
+          data={Projects.completedTasks || []}
+          color="#8BC48A"
+          taskKey="completedTasks"
+          onModalOpen={(taskId) => {
+            setEditModalDetails({ taskId, projectId, type: "completedTasks" });
+            setModalOpen(true);
+          }}
+        />
+      </section>
+    </>
   );
 };
 

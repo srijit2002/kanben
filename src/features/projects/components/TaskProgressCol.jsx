@@ -1,9 +1,34 @@
 import { twMerge } from "tailwind-merge";
 import { TaskCard } from "./TaskCard";
 import PropTypes from "prop-types";
-import { Droppable } from "react-beautiful-dnd";
+import { Plus } from "phosphor-react";
+import { useAppContext } from "@/context/Context";
+import { useParams } from "react-router-dom";
+import { NEW_TASK } from "../variables";
+import { toast } from "react-toastify";
 
-export const TaskProgressCol = ({ data = [], title = "", color = "", _id }) => {
+export const TaskProgressCol = ({
+  data = [],
+  title = "",
+  color = "",
+  onModalOpen = () => {},
+  taskKey = "",
+}) => {
+  const { setProjects } = useAppContext();
+  const { projectId } = useParams();
+  const handleAddTask = () => {
+    setProjects((projects) => {
+      return projects.map((project) => {
+        if (project.id === projectId) {
+          project[taskKey].unshift(NEW_TASK());
+          return project;
+        }
+        return project;
+      });
+    });
+    toast("Task added successfully!!", { type: "success" });
+  };
+
   return (
     <section className="flex flex-col gap-4 flex-1 bg-gray-dark p-5 rounded-2xl">
       <div
@@ -22,23 +47,27 @@ export const TaskProgressCol = ({ data = [], title = "", color = "", _id }) => {
             {data.length}
           </span>
         </div>
+        <button
+          onClick={handleAddTask}
+          className="self-center text-sm font-semibold justify-self-end cursor-pointer bg-blue-300 text-white p-1 rounded-full shadow hover:opacity-75"
+        >
+          <Plus size={18} />
+        </button>
       </div>
-      <Droppable droppableId={_id}>
-        {(provided) => {
+      <section className="flex flex-col gap-4">
+        {data.map((task, index) => {
           return (
-            <section
-              className="flex flex-col gap-4"
-              {...provided.droppableProps}
-              ref={provided.innerRef}
-            >
-              {data.map((task, index) => {
-                return <TaskCard key={task._id} {...task} index={index} />;
-              })}
-              {provided.placeholder}
-            </section>
+            <TaskCard
+              key={task._id}
+              {...task}
+              index={index}
+              onModalOpen={() => onModalOpen(task._id)}
+              taskKey={taskKey}
+              taskId={task._id}
+            />
           );
-        }}
-      </Droppable>
+        })}
+      </section>
     </section>
   );
 };
@@ -47,5 +76,7 @@ TaskProgressCol.propTypes = {
   data: PropTypes.array,
   title: PropTypes.string,
   color: PropTypes.string,
-  id:PropTypes.number
+  taskKey: PropTypes.string,
+  handleEdit: PropTypes.func,
+  onModalOpen: PropTypes.func,
 };

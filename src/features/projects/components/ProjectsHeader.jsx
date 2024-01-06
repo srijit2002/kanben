@@ -1,51 +1,89 @@
-import { PencilSimple, LinkSimpleHorizontal } from "phosphor-react";
-import AddSquare from "@/features/misc/assets/AddSquare.svg";
-import PropTypes from "prop-types";
+import { PencilSimple, Trash, CheckCircle } from "phosphor-react";
+import { useEffect, useRef, useState } from "react";
+import { Modal } from "@/components/Modal";
+import { useAppContext } from "@/context/Context";
+import { useParams, useNavigate } from "react-router-dom";
 
-export const ProjectsHeader = ({ title, people = [] }) => {
+export const ProjectsHeader = () => {
+  const [isEditing, setIsEditing] = useState(false);
+  const { Projects, setProjects } = useAppContext();
+  const [modalOpen, setModalOpen] = useState(false);
+  const titleRef = useRef();
+  const { projectId } = useParams();
+  const projectDetails = Projects.find((project) => project.id === projectId);
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (isEditing) titleRef.current.focus();
+  }, [isEditing]);
+
+  const handleDelete = () => {
+    setModalOpen(true);
+  };
+  const handleConfirm = () => {
+    setProjects((projects) =>
+      projects.filter((project) => project.id !== projectId)
+    );
+    navigate("/");
+  };
+  const handleTitleEdit = (e) => {
+    setProjects((projects) =>
+      projects.map((project) => {
+        if (project.id === projectId) {
+          return { ...project, title: e.target.value };
+        }
+        return project;
+      })
+    );
+  };
+  const handleSaveTitle = () => {
+    if (isEditing) {
+      let updatedProjects = Projects.map((project) => {
+        if (project.id === projectId) return projectDetails;
+        return project;
+      });
+      setProjects(updatedProjects);
+    }
+    setIsEditing((prev) => !prev);
+  };
+
   return (
-    <section className="flex items-center justify-between lg:flex-wrap gap-2">
-      <div className="flex items-center gap-4">
-        <h1 className="text-5xl font-semibold text-[#0D062D] lg:text-3xl">
-          {title}
-        </h1>
-        <div className="flex gap-2">
-          <button className="bg-blue-light text-blue-dark p-1 rounded-md">
-            <PencilSimple size={18} />
-          </button>
-          <button className="bg-blue-light text-blue-dark p-1 rounded-md">
-            <LinkSimpleHorizontal size={18} />
-          </button>
-        </div>
-      </div>
-      <div className="flex items-center gap-8">
-        <button className=" text-blue-dark p-1 rounded-md flex items-center gap-3">
-          <div className="bg-blue-light w-fit rounded-md">
-            <img src={AddSquare} alt="Add A items" />
+    <>
+      <Modal
+        isOpen={modalOpen}
+        closeModal={() => setModalOpen(false)}
+        onConfirm={handleConfirm}
+        onCancel={() => setModalOpen(false)}
+      />
+      <section className="flex items-center justify-between lg:flex-wrap gap-2">
+        <div className="flex items-center gap-4">
+          <input
+            className="text-5xl font-semibold text-[#0D062D] lg:text-3xl bg-transparent"
+            value={projectDetails.title}
+            disabled={!isEditing}
+            onChange={handleTitleEdit}
+            ref={titleRef}
+            name="title"
+          />
+          <div className="flex gap-2">
+            <button
+              className="bg-blue-light text-blue-dark p-1 rounded-md"
+              onClick={handleSaveTitle}
+            >
+              {isEditing ? (
+                <CheckCircle size={18} />
+              ) : (
+                <PencilSimple size={18} />
+              )}
+            </button>
+            <button
+              className="bg-red-100 text-red-400 p-1 rounded-md"
+              onClick={handleDelete}
+            >
+              <Trash size={18} />
+            </button>
           </div>
-          Invite
-        </button>
-        <div className="flex">
-          {people.slice(0, 4).map((person) => (
-            <img
-              src={person.avatar}
-              key={person.avatar}
-              alt={person.name}
-              className="w-10 object-cover rounded-full h-10 -ml-4 border-2 border-white"
-            />
-          ))}
-          {people.length > 4 && (
-            <div className="w-10 h-10 font-semibold text-[#D8727D] bg-[#f4d7da] rounded-full -ml-4 flex justify-center items-center">
-              +{people.length - 4}
-            </div>
-          )}
         </div>
-      </div>
-    </section>
+      </section>
+    </>
   );
-};
-
-ProjectsHeader.propTypes = {
-  title: PropTypes.string,
-  people: PropTypes.array,
 };
